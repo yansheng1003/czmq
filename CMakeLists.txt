@@ -130,21 +130,37 @@ set(OPTIONAL_LIBRARIES_STATIC)
 ########################################################################
 # LIBZMQ dependency
 ########################################################################
-IF (NOT libzmq_FOUND)
-    find_package(libzmq REQUIRED)
-ENDIF(NOT libzmq_FOUND)
-IF (libzmq_FOUND)
-    include_directories(${libzmq_INCLUDE_DIRS})
+if(MINGW)
+    message(STATUS "Using MinGW: manually setting libzmq paths")
+    
+    set(libzmq_INCLUDE_DIR "D:/Sync/ATS/libzmq/include")
+    set(libzmq_LIBRARY "D:/Sync/ATS/libzmq/release/dll/libzmq.dll.a")
+    set(libzmq_LIBRARIES ${libzmq_LIBRARY})
+
+    include_directories(${libzmq_INCLUDE_DIR})
     list(APPEND MORE_LIBRARIES ${libzmq_LIBRARIES})
-  IF (PC_LIBZMQ_FOUND)
-      set(pkg_config_names_private "${pkg_config_names_private} libzmq")
-      list(APPEND OPTIONAL_LIBRARIES_STATIC ${PC_LIBZMQ_STATIC_LDFLAGS})
-  ELSE (PC_LIBZMQ_FOUND)
-      set(pkg_config_libs_private "${pkg_config_libs_private} -lzmq")
-  ENDIF (PC_LIBZMQ_FOUND)
-ELSE (libzmq_FOUND)
-    message( FATAL_ERROR "libzmq not found." )
-ENDIF (libzmq_FOUND)
+else()
+    message(STATUS "Using non-MinGW compiler: using find_package for libzmq")
+
+    if (NOT libzmq_FOUND)
+        find_package(libzmq REQUIRED)
+    endif()
+
+    if (libzmq_FOUND)
+        include_directories(${libzmq_INCLUDE_DIRS})
+        list(APPEND MORE_LIBRARIES ${libzmq_LIBRARIES})
+
+        if (PC_LIBZMQ_FOUND)
+            set(pkg_config_names_private "${pkg_config_names_private} libzmq")
+            list(APPEND OPTIONAL_LIBRARIES_STATIC ${PC_LIBZMQ_STATIC_LDFLAGS})
+        else()
+            set(pkg_config_libs_private "${pkg_config_libs_private} -lzmq")
+        endif()
+    else()
+        message(FATAL_ERROR "libzmq not found.")
+    endif()
+endif()
+
 
 ########################################################################
 # UUID dependency
