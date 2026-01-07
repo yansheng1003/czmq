@@ -1,0 +1,187 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "mingw-base",
+      "displayName": "MinGW Base",
+      "description": "Shared configuration for MinGW-w64 from Qt 5.12.12",
+      "hidden": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "generator": "Ninja",
+      "binaryDir": "out/build/${hostSystemName}/${presetName}",
+      "installDir": "out/install/${hostSystemName}/${presetName}",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "C:/Qt/Qt5.12.12/Tools/mingw730_64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "C:/Qt/Qt5.12.12/Tools/mingw730_64/bin/g++.exe",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_C_FLAGS": "-DCZMQ_STATIC",
+        "libzmq_INCLUDE_DIRS": "E:/ipc/include/zmq",
+        "libzmq_LIBRARIES": "E:/ipc/lib/zmq/libzmq.dll.a"
+      }
+    },
+    {
+      "name": "linux-gcc-base",
+      "displayName": "Linux GCC Base",
+      "hidden": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "generator": "Ninja",
+      "binaryDir": "out/build/${hostSystemName}/${presetName}",
+      "installDir": "out/install/${hostSystemName}/${presetName}",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "mingw-debug",
+      "displayName": "MinGW Debug",
+      "inherits": "mingw-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "mingw-release",
+      "displayName": "MinGW Release",
+      "inherits": "mingw-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "mingw-relwithdebinfo",
+      "displayName": "MinGW RelWithDebInfo",
+      "inherits": "mingw-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "mingw-minsizerel",
+      "displayName": "MinGW MinSizeRel",
+      "inherits": "mingw-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel"
+      }
+    },
+    {
+      "name": "linux-debug",
+      "inherits": [
+        "linux-gcc-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-release",
+      "inherits": [
+        "linux-gcc-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "linux-relwithdebinfo",
+      "inherits": [
+        "linux-gcc-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "linux-minsizerel",
+      "inherits": [
+        "linux-gcc-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "mingw-debug",
+      "configurePreset": "mingw-debug",
+      "jobs": 8
+    },
+    {
+      "name": "mingw-release",
+      "configurePreset": "mingw-release",
+      "jobs": 8
+    },
+    {
+      "name": "mingw-relwithdebinfo",
+      "configurePreset": "mingw-relwithdebinfo",
+      "jobs": 8
+    },
+    {
+      "name": "mingw-minsizerel",
+      "configurePreset": "mingw-minsizerel",
+      "jobs": 8
+    },
+    {
+      "name": "linux-debug",
+      "configurePreset": "linux-debug",
+      "jobs": 8
+    },
+    {
+      "name": "linux-release",
+      "configurePreset": "linux-release",
+      "jobs": 8
+    },
+    {
+      "name": "linux-relwithdebinfo",
+      "configurePreset": "linux-relwithdebinfo",
+      "jobs": 8
+    },
+    {
+      "name": "linux-minsizerel",
+      "configurePreset": "linux-minsizerel",
+      "jobs": 8
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "mingw-debug-test",
+      "displayName": "Run Tests (Debug)",
+      "configurePreset": "mingw-debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "mingw-release-package",
+      "displayName": "Package Release Build",
+      "configurePreset": "mingw-release",
+      "generators": [
+        "ZIP"
+      ],
+      "packageName": "MyApp",
+      "packageVersion": "1.0.0",
+      "packageDirectory": "out/package"
+    }
+  ]
+}
